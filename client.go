@@ -11,11 +11,7 @@ import (
 
 // Client represents a boltdbclient to the underlying BoltDB data store.
 type Client struct {
-	// Returns the current time.
-	Now func() time.Time
-
-	Db *bolt.DB
-
+	Db     *bolt.DB
 	config Config
 }
 
@@ -23,7 +19,6 @@ type Client struct {
 func NewClient(config Config) *Client {
 	return &Client{
 		config: config,
-		Now:    time.Now,
 	}
 }
 
