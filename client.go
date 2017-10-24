@@ -22,14 +22,24 @@ func NewClient(config Config) *Client {
 	}
 }
 
+func (c *Client) Path() string {
+	p := c.config.Dir
+	if p == "" {
+		p = "./"
+	}
+	return path.Join(p, c.config.Filename)
+}
+
 // Open opens and initializes the BoltDB database.
 func (c *Client) Open() (string, error) {
 
-	if err := os.MkdirAll(c.config.Dir, 0666); err != nil {
-		return "", err
+	if c.config.Dir != "" {
+		if err := os.MkdirAll(c.config.Dir, 0666); err != nil {
+			return "", err
+		}
 	}
 
-	dbPath := path.Join(c.config.Dir, c.config.Filename)
+	dbPath := c.Path()
 	// Open database file.
 	if dbConn, err := bolt.Open(dbPath, 0666, &bolt.Options{Timeout: 1 * time.Second}); err != nil {
 		return dbPath, err
